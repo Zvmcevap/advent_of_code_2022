@@ -1,33 +1,24 @@
-
+from utils.stop_watch import time_me
 
 vse_vsote = []
 
 
+@time_me
 def part_one():
     vsota = 0
     with open("day_1.txt") as f:
         for line in f.readlines():
             if line.strip() == "":
-                print("-----------------")
-                print(vsota)
-                print("-----------------")
                 vse_vsote.append(vsota)
                 vsota = 0
             else:
                 print(line.strip())
                 vsota += int(line.strip())
-    print("-----------------")
-    print(vsota)
-    print("-----------------")
     vse_vsote.append(vsota)
-    print("")
-    print("-----------------")
-    print(vse_vsote)
-    print("-----------------")
-    print("")
     print(f"MAX VSOTA = {max(vse_vsote)}")
 
 
+@time_me
 def part_two():
     trije_najjaci = 0
     for i in range(3):

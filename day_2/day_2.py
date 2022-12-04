@@ -1,3 +1,5 @@
+from utils.stop_watch import time_me
+
 opponent = []
 me = []
 
@@ -22,6 +24,8 @@ opps_hand = {
     "C": "Scissors"
 }
 
+
+@time_me
 def part_one():
     my_hand = {
         "X": "Rock",
@@ -42,6 +46,7 @@ def part_one():
     print(f"Part One Score = {score}")
 
 
+@time_me
 def part_two():
     my_hand = {
         "X": "Loss",
