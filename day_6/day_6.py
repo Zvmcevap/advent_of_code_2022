@@ -14,11 +14,9 @@ def problem_solver(how_many_uniques: int):
     for i in range(len(dsb) - (how_many_uniques - 1)):
         uniques = set(dsb[i: i + how_many_uniques])
         if len(uniques) == how_many_uniques:
-            first_package_location = i + how_many_uniques
-            break
-    print(f"First Package Location = {first_package_location}")
+            return i + how_many_uniques
 
 
 if __name__ == "__main__":
-    problem_solver(4)
-    problem_solver(14)
+    print(problem_solver(4))
+    print(problem_solver(14))
