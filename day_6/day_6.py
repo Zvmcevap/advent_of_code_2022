@@ -9,8 +9,6 @@ def get_input():
 @time_me
 def problem_solver(how_many_uniques: int):
     dsb = get_input()
-    first_package_location = None
-
     for i in range(len(dsb) - (how_many_uniques - 1)):
         uniques = set(dsb[i: i + how_many_uniques])
         if len(uniques) == how_many_uniques:
