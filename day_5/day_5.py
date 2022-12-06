@@ -4,7 +4,6 @@ from collections import deque
 import re
 
 
-@time_me
 def create_data_from_input():
     commands = []
     commands_started = False
@@ -24,10 +23,9 @@ def create_data_from_input():
 
             if commands_started:
                 search_pattern = re.search("move ([0-9]+) from ([0-9]+) to ([0-9]+)", line)
-                command = {}
-                command["move"] = int(search_pattern.group(1))
-                command["from"] = int(search_pattern.group(2))
-                command["to"] = int(search_pattern.group(3))
+                command = {"move": int(search_pattern.group(1)),
+                           "from": int(search_pattern.group(2)),
+                           "to": int(search_pattern.group(3))}
                 commands.append(command)
 
             if not line.strip():
@@ -48,7 +46,7 @@ def part_one():
     solution = ""
     for sklad in stacks:
         solution += sklad.pop()
-    print(f"Solution = {solution}")
+    print(f"Solution Part One = {solution}")
 
 
 @time_me
@@ -66,8 +64,7 @@ def part_two():
     solution = ""
     for mesto in tovorna_mesta:
         solution += mesto[-1]
-    print(solution)
-
+    print(f"Solution Part Two = {solution}")
 
 
 if __name__ == "__main__":
