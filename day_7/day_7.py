@@ -13,7 +13,7 @@ def get_input():
 class Directory:
     def __init__(self, name, depth, papa):
         self.name: str = name
-        self.contains_files = {}
+        self.contains_files: Dict[str, int] = {}
         self.contains_directories: List[Directory] = []
         self.size: int = 0
         self.depth: int = depth
