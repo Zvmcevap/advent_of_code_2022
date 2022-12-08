@@ -4,7 +4,7 @@ import numpy as np
 
 def get_forrest():
     with open("day_8.txt") as f:
-        return [[int(tree) for tree in line.strip()] for line in f.readlines()]
+        return [[int(tree) for tree in line.strip()] for line in f.readlines()]  # sem probu ;)
 
 
 @time_me
