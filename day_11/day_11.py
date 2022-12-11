@@ -1,6 +1,5 @@
 from utils.stop_watch import time_me
 from typing import List, Dict
-import re
 
 
 def get_input_list():
@@ -90,7 +89,6 @@ def get_monkey_business(relief: bool, rounds: int):
     for i in range(rounds):
         for monkey in monkeys:
             monkey.play_round(relief=relief)
-
     monkeys.sort(reverse=True)
     return monkeys[0].checked_item_counter * monkeys[1].checked_item_counter
 
