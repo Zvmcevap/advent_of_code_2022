@@ -8,6 +8,28 @@ class Packet:
     def __init__(self, container):
         self.container = container
 
+    def __lt__(self, other):
+        return self.check_order(deepcopy(self.container), deepcopy(other.container))
+
+    def check_order(self, left: List, right: List):
+        for i in range(max(len(left), len(right))):
+            if i == len(left):
+                return True
+            if i == len(right):
+                return False
+
+            if type(left[i]) == int and type(right[i]) == int:
+                if left[i] != right[i]:
+                    return left[i] < right[i]
+            else:
+                if type(left[i]) == list and type(right[i]) == int:
+                    right[i] = [right[i]]
+                elif type(left[i]) == int and type(right[i]) == list:
+                    left[i] = [left[i]]
+                if self.check_order(left[i], right[i]) is not None:
+                    return self.check_order(left[i], right[i])
+
+
 
 class Sorter:
     def __init__(self):
@@ -206,6 +228,22 @@ class Sorter:
             self.conquer(packets, left, pivot - 1)
             self.conquer(packets, pivot + 1, right)
 
+    @time_me
+    def python_sort(self):
+        sorted_by_python = self.packets.copy()
+        sorted_by_python.sort()
+
+        fd_index = 0
+        sd_index = 0
+        for i, pack in enumerate(sorted_by_python):
+            if pack == self.first_divider:
+                fd_index = i + 1
+            if pack == self.second_divider:
+                sd_index = i + 1
+        print("---------------------------------")
+        print("python")
+        return fd_index * sd_index
+
 
 def get_packets():
     with open("day_13.txt") as f:
@@ -228,9 +266,12 @@ def very_solution():
     bubble = sorter.bubble_sort()
     insertion = sorter.insertion_sort()
     selection = sorter.selection_sort()
+    python = sorter.python_sort()
+
     print("---------------------------------")
     print("Solutions Part Two")
-    print(f"quick = {quick}, merge = {merge}, bubble = {bubble}, insertion = {insertion}, selection = {selection}")
+    print(f"quick = {quick}, merge = {merge}, bubble = {bubble}, insertion = {insertion}, selection = {selection}, python_sort = {python}")
+    print("---------------------------------")
 
     return part_uno
 
