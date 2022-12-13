@@ -4,6 +4,7 @@ import string
 
 letters = list(string.ascii_letters)
 rucksacks = []
+print(letters)
 
 with open("day_3.txt") as f:
     for line in f.readlines():
