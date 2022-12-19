@@ -46,6 +46,10 @@ class Valve:
         return flow if flow > 0 else 0
 
     def open_valve(self, time):
+        if self.distance < 0 and time - 1 < 0:
+            self.end_pressure = 0
+            self.flow = 0
+            return
         pressure = self.flow * (time - self.distance - 1)
         self.end_pressure = pressure if pressure > 0 else 0
         self.flow = 0
