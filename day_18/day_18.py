@@ -13,6 +13,14 @@ def get_drops(filename):
         return drops
 
 
+def make_obj_file():
+    xyz_list = get_drops("day_18.txt")
+    with open("lava_small.txt", "w") as f:
+        for xyz in xyz_list:
+            f.write(f"v {(xyz[0]) / 10} {(xyz[1]) / 10} {xyz[2] / 10}\n")
+        f.write("\n")
+
+
 class Node:
     def __init__(self, coords):
         self.x = coords[0]
@@ -159,6 +167,7 @@ def part_both():
 
 
 if __name__ == "__main__":
+    # make_obj_file()
     solution_part_one, solution_part_duce = part_both()
     print(f"Solution part one = {solution_part_one}")
     print(f"Solution part duce = {solution_part_duce}")

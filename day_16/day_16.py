@@ -50,7 +50,7 @@ class Valve:
             self.end_pressure = 0
             self.flow = 0
             return
-        pressure = self.flow * (time - self.distance - 1)
+        pressure = self.flow * (time - self.distance - 2)
         self.end_pressure = pressure if pressure > 0 else 0
         self.flow = 0
 
@@ -66,8 +66,9 @@ class Valve:
 
 class Path:
     def __init__(self):
-        self.valve_names: List[str] = []
+        self.valve_names: List[Dict[str, int]] = []
         self.score: int = 0
+
     def __str__(self):
         return f"{self.valve_names} score: {self.score}"
 
@@ -122,16 +123,21 @@ class PathRememberer:
                     closed_list.remove(valve)
             closed_list.append(current_valve)
             open_list.remove(current_valve)
-        #plot_graph(closed_list, "TEST", False)
+        # plot_graph(closed_list, "TEST", False)
         return closed_list
 
     def update_potential_flow(self, valves: List[Valve], time: int):
         for v in valves:
             v.potential_flow = v.get_potential_flow(time=time)
 
-    def find_dead_ends(self, valves: List[Valve]):
+    def find_dead_ends(self, valves: List[Valve], current_valve: Valve, time: int):
         dead_ends = valves.copy()
+        dead_ends.remove(current_valve)
+        valves.remove(current_valve)
         for v in valves:
+            if v.distance >= time or v.distance == 0 or v.distance == math.inf:
+                print(v)
+                raise "WTF"
             if v.parent in dead_ends:
                 dead_ends.remove(v.parent)
         return dead_ends
@@ -157,7 +163,7 @@ class PathRememberer:
     def get_candidates(self, current_valve: Valve, time: int) -> List[Valve]:
         current_valve.distance = 0
         reachable_valves = self.calculate_distances(current_valve=current_valve, time=time)
-        dead_ends = self.find_dead_ends(valves=reachable_valves)
+        dead_ends = self.find_dead_ends(valves=reachable_valves, current_valve=current_valve, time=time)
         self.update_potential_flow(valves=reachable_valves, time=time)
         potential = []
         for de in dead_ends:
@@ -182,12 +188,16 @@ class PathRememberer:
         path = Path()
         self.big_reset()
         valves = self.valves
-        current_valve = self.valves[0]
+        current_valve = None
+        for valve in valves:
+            if valve.name == "AA":
+                current_valve = valve
         time = 30
         decision = self.decision
         end_presure = 0
         while time > 0 and not decision.fully_explored:
             self.small_reset()
+            current_valve.distance = 0
             candidates = self.get_candidates(current_valve=current_valve, time=time)
             # Tell the decision maker how many options it has
             decision.possible_paths = len(candidates)
@@ -201,8 +211,10 @@ class PathRememberer:
             if open_current and time > 0:
                 end_presure += current_valve.flow * (time - 1)
                 current_valve.open_valve(time=time)
+                path_dict = {current_valve.name: current_valve.remember_thy_flow, "time": time - 1}
+                path.valve_names.append(path_dict)
                 time -= 1
-                if time == 0:
+                if time < 1:
                     decision.fully_explored = True
                     break
             if len(candidates) == 0:
@@ -233,10 +245,12 @@ class PathRememberer:
             if index == future_decision is None:
                 decision.fully_explored = True
                 break
-            path.valve_names.append(current_valve.name)
+
             current_valve = sorted(candidates, key=attrgetter("potential_flow"))[index]
             time -= current_valve.distance
             end_presure += current_valve.flow * (time - 1) if time > 0 else 0
+            path_dict = {current_valve.name: current_valve.remember_thy_flow, "time": time - 1}
+            path.valve_names.append(path_dict)
             current_valve.distance = 0
             current_valve.open_valve(time=time)
 
@@ -251,12 +265,9 @@ class PathRememberer:
             if not deci.fully_explored:
                 all_explored = False
         self.decision.fully_explored = all_explored
-        path.valve_names.append(current_valve.name)
         path.score = 0
         self.end_scores.append(end_presure)
-        end_presure = 0
-        for valve in valves:
-
+        for valve in self.valves:
             path.score += valve.end_pressure
         self.paths.append(path)
         return path
@@ -270,9 +281,10 @@ class PathRememberer:
                 print(max_score, path)
             max_score += 1
 
+
 def part_one():
-    test = False
-    input_file = save_location = "test" if test else "day_16"
+    test = True
+    input_file = save_location = "day_16" if test else "day_16_b"
     valves = get_input(input_file + ".txt")
     path_rememberer = PathRememberer(valves=valves)
     path_rememberer.explore_all_paths()
@@ -282,6 +294,15 @@ def part_one():
         if i > len(path_rememberer.paths) - 30:
             print(i, p, "-", path_rememberer.end_scores[i])
     print(len(path_rememberer.paths))
+
+    print("TESTING TESTING")
+    score = 0
+    for p in sorted(path_rememberer.paths, key=attrgetter("score"))[-1].valve_names:
+        product = 1
+        for key in p:
+            product *= p[key]
+        score += product
+    print(f"Score = {score}")
 
 
 if __name__ == "__main__":
