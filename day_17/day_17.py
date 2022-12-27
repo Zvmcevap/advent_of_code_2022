@@ -1,5 +1,3 @@
-import math
-
 from matplotlib import pyplot as plt
 from utils.stop_watch import time_me
 import numpy as np
@@ -265,6 +263,7 @@ class ShapeAnalizer:
                f"\n-----"
 
 
+@time_me
 def do_tetris(how_many_times, second_part=False, test=False):
     test = test
     filename = "test.txt" if test else "day_17.txt"
@@ -314,13 +313,14 @@ def do_tetris(how_many_times, second_part=False, test=False):
     return len(cave.cave) - 1 if not second_part else part_two_search
 
 
+@time_me
 def herkul_poirot():
     test = False
     big_ass_number = 1000000000000
     big_ass_solution = 1514285714288  # Testing basic solution
 
     # Do a bunch of times to find patterns for the super-duper analyzer
-    shapes = do_tetris(5 * 2000, second_part=True, test=test)
+    shapes = do_tetris(5 * 2000, True, test)
 
     # Do the analysis // very scientific
     for id_number in shapes:
@@ -351,7 +351,7 @@ def herkul_poirot():
 
 
 if __name__ == "__main__":
-    solution_one = do_tetris(how_many_times=2022)
+    solution_one = do_tetris(2022)
     print(f"Part uno = {solution_one}")
 
     solution_two = herkul_poirot()
