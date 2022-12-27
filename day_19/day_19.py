@@ -82,7 +82,7 @@ class Stratagem:
             can_build = True
             max_time_to_harvest = 0
             for mineral in costs:
-                if mineral == "ore" and garage["ore"] >= 6:
+                if mineral == "ore" and garage["ore"] >= 5:
                     can_build = False
                     break
                 if mineral == "clay" and garage["clay"] >= self.blueprint.costs["obsidian"]["clay"]:
@@ -99,7 +99,7 @@ class Stratagem:
                     can_build = False
                     break
                 max_time_to_harvest = time_to_harvest if time_to_harvest > max_time_to_harvest else max_time_to_harvest
-            if can_build:
+            if can_build and max_time_to_harvest < 5:
                 if robot == "goede" and max_time_to_harvest == 0:
                     return {"goede": 1}
                 my_options[robot] = max_time_to_harvest + 1
