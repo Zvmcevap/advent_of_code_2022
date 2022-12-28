@@ -1,5 +1,5 @@
 import math
-from typing import Dict, Optional, List
+from typing import Dict
 import re
 
 from utils.stop_watch import time_me
@@ -44,7 +44,7 @@ class Stratagem:
 
     def tree_of_decisions(self, time_left: int, silos: Dict[str, int], garage: Dict[str, int]):
         # Worth it? HUZZAH!
-        if silos["goede"] + time_left * garage["goede"] + time_left * (time_left - 1)/2 < self.goedes_collected:
+        if silos["goede"] + time_left * garage["goede"] + time_left * (time_left - 1) / 2 < self.goedes_collected:
             return
         if time_left == 0:
             if self.goedes_collected < silos["goede"]:
@@ -103,7 +103,6 @@ class Stratagem:
                 if robot == "goede" and max_time_to_harvest == 0:
                     return {"goede": 1}
                 my_options[robot] = max_time_to_harvest + 1
-
         return my_options
 
 
@@ -114,7 +113,7 @@ def play_starcraft():
     blueprints = load_blueprints(filename=filename)
 
     # Part One
-    part_one_goades = []
+    part_one_goedes = []
     print("--- PART ONE ---")
     for b in blueprints:
         strategy = Stratagem(blueprint=b)
@@ -122,7 +121,7 @@ def play_starcraft():
         goedes_collected = strategy.goedes_collected
         print(b)
         print(f"Goedes Collected: {goedes_collected}")
-        part_one_goades.append(b.id * goedes_collected)
+        part_one_goedes.append(b.id * goedes_collected)
 
     # Part two
     do_times = 2 if test else 3
@@ -139,7 +138,7 @@ def play_starcraft():
     for goede in part_two_goedes:
         solution_dos *= goede
 
-    return sum(part_one_goades), solution_dos
+    return sum(part_one_goedes), solution_dos
 
 
 if __name__ == "__main__":
